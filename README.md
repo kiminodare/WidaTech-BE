@@ -1,4 +1,4 @@
-# 🧾 WidaTech Backend (NestJS)
+# 🧾 WidaTech Technical Challenge - Backend (NestJS)
 
 Backend service untuk aplikasi WidaTech, dibangun menggunakan [NestJS](https://nestjs.com/), [Prisma ORM](https://www.prisma.io/), dan PostgreSQL.
 
