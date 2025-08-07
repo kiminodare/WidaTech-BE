@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Invoice {
+  id          Int              @id @default(autoincrement())
+  invoiceNo   String           @unique
+  date        DateTime
+  customer    String
+  salesperson String
+  paymentType String
+  notes       String?
+  products    InvoiceProduct[]
+  createdAt   DateTime         @default(now())
+}
+
+model InvoiceProduct {
+  id         Int     @id @default(autoincrement())
+  invoice    Invoice @relation(fields: [invoiceId], references: [id])
+  invoiceId  Int
+  item       String
+  price      Float   @default(0)
+  quantity   Int
+  totalCogs  Float
+  totalPrice Float
+}
