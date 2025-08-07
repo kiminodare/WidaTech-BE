@@ -1,4 +1,3 @@
-// result.interceptor.ts
 import {
   Injectable,
   NestInterceptor,
@@ -10,23 +9,39 @@ import { Observable, map } from 'rxjs';
 interface Result<T> {
   status: boolean;
   message: string;
-  result: T;
+  result?: T;
 }
 
 @Injectable()
-export class ResultInterceptor<T> implements NestInterceptor<T, Result<T>> {
+export class ResultInterceptor implements NestInterceptor {
   intercept(
-    context: ExecutionContext,
-    next: CallHandler<T>,
-  ): Observable<Result<T>> {
+    _context: ExecutionContext,
+    next: CallHandler,
+  ): Observable<Result<unknown>> {
     return next.handle().pipe(
-      map(
-        (data: T): Result<T> => ({
+      map((data: unknown) => {
+        if (typeof data === 'string') {
+          return {
+            status: true,
+            message: data,
+            result: undefined,
+          };
+        }
+
+        if (typeof data === 'object' || Array.isArray(data)) {
+          return {
+            status: true,
+            message: 'Success',
+            result: data,
+          };
+        }
+
+        return {
           status: true,
           message: 'Success',
           result: data,
-        }),
-      ),
+        };
+      }),
     );
   }
 }

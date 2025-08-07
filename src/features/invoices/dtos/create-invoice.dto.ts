@@ -8,7 +8,9 @@ import {
   IsOptional,
   IsString,
   ValidateNested,
+  Validate,
 } from 'class-validator';
+import { QuantityExceedsStock } from '@/features/invoices/validators/quantity-exceeds-stock.validator';
 
 export enum PaymentType {
   CASH = 'CASH',
@@ -17,22 +19,30 @@ export enum PaymentType {
 }
 
 export class CreateInvoiceProductDto {
+  @IsInt()
+  readonly productId: number;
+
   @IsString()
   readonly item: string;
 
   @IsInt()
+  @Validate(QuantityExceedsStock)
   readonly quantity: number;
+
+  @IsInt()
+  readonly price: number;
 
   @IsNumber()
   readonly totalCogs: number;
 
+  @IsOptional()
   @IsNumber()
   readonly totalPrice: number;
 }
 
 export class CreateInvoiceDto {
-  @IsInt()
-  readonly invoiceNo: number;
+  @IsString()
+  readonly invoiceNo: string;
 
   @IsDateString()
   readonly date: string;
